@@ -64,7 +64,9 @@ const JalwaAPI = {
                 body: JSON.stringify(payload)
             });
             
+            console.log('Response status:', response.status);
             const data = await response.json();
+            console.log('Response data:', data);
             
             if (data.code === 0) {
                 this.token = data.data.token;
@@ -78,7 +80,13 @@ const JalwaAPI = {
             }
         } catch (error) {
             console.error('Login error:', error);
-            return { success: false, message: 'Network error. Please try again.' };
+            if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
+                return { 
+                    success: false, 
+                    message: 'CORS Error: Cannot connect to API from browser. Please use a backend proxy or CORS extension. See console for details.' 
+                };
+            }
+            return { success: false, message: `Network error: ${error.message}` };
         }
     },
     
