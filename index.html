@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jalwa.Game - Gaming Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Color Palette */
+            --primary-bg: #0A0E27;
+            --secondary-bg: #141B3D;
+            --card-bg: #1A2347;
+            --accent-cyan: #00E5CC;
+            --accent-red: #FF5252;
+            --success-green: #4CAF50;
+            --warning-red: #FF5252;
+            --text-primary: #FFFFFF;
+            --text-secondary: #8A94A6;
+            --vip-pink: #FF6B9D;
+            --gold: #F9A825;
+            --orange: #FF9800;
+            
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-s: 8px;
+            --spacing-m: 16px;
+            --spacing-l: 24px;
+            --spacing-xl: 32px;
+            
+            /* Border Radius */
+            --radius-s: 8px;
+            --radius-m: 12px;
+            --radius-l: 16px;
+            --radius-full: 28px;
+            
+            /* Shadows */
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-button: 0 4px 12px rgba(0, 229, 204, 0.3);
+            --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0A0E27 0%, #141B3D 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+            background: var(--primary-bg);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 24px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 var(--spacing-m);
+            font-size: 12px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            height: 56px;
+            background: rgba(20, 27, 61, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--spacing-m);
+            gap: var(--spacing-m);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .nav-icon:hover {
+            opacity: 1;
+        }
+
+        .url-bar {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: var(--radius-full);
+            padding: 8px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #141B3D 0%, #1A2347 100%);
+            padding: var(--spacing-l) var(--spacing-m);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--accent-cyan), #00FFDD);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-btn {
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-4px);
+        }
+
+        .lang-selector {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent-cyan);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .flag-icon {
+            width: 24px;
+            height: 16px;
+            border-radius: 2px;
+        }
+
+        /* Page Container */
+        .page {
+            display: none;
+            padding: var(--spacing-m);
+            padding-bottom: 80px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Login Page */
+        .login-page {
+            padding: var(--spacing-xl) var(--spacing-m);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .tab-navigation {
+            display: flex;
+            gap: var(--spacing-l);
+            margin-bottom: var(--spacing-xl);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab {
+            padding: var(--spacing-m) 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .tab.active {
+            color: var(--accent-cyan);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-cyan);
+            border-radius: 2px 2px 0 0;
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-l);
+        }
+
+        .input-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: var(--spacing-s);
+        }
+
+        .input-label svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .input-container {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: var(--radius-m);
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .input-container:focus-within {
+            border-color: var(--accent-cyan);
+        }
+
+        .country-code {
+            padding: 0 var(--spacing-m);
+            font-size: 16px;
+            font-weight: 600;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-primary);
+        }
+
+        .input-field {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: var(--spacing-m);
+            font-size: 16px;
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+
+        .input-field::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .input-field:focus {
+            outline: none;
+        }
+
+        .input-icon {
+            padding: 0 var(--spacing-m);
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+
+        .input-icon:hover {
+            opacity: 1;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-s);
+            margin: var(--spacing-m) 0;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--text-secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .checkbox.checked {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary-bg);
+            font-weight: bold;
+        }
+
+        .checkbox-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .primary-btn {
+            width: 100%;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-cyan), #00FFDD);
+            border: none;
+            border-radius: var(--radius-full);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-bg);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-button);
+            font-family: inherit;
+            margin-top: var(--spacing-l);
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 229, 204, 0.4);
+        }
+
+        .primary-btn:active {
+            transform: translateY(0);
+        }
+
+        .primary-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .secondary-btn {
+            width: 100%;
+            height: 56px;
+            background: transparent;
+            border: 2px solid var(--accent-cyan);
+            border-radius: var(--radius-full);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            margin-top: var(--spacing-m);
+        }
+
+        .secondary-btn:hover {
+            background: rgba(0, 229, 204, 0.1);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: space-around;
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-xl);
+        }
+
+        .footer-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-s);
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .footer-link svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Floating Chat Button */
+        .floating-chat {
+            position: fixed;
+            bottom: 88px;
+            right: var(--spacing-l);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-cyan), #00FFDD);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-elevated);
+            transition: transform 0.3s;
+            z-index: 100;
+        }
+
+        .floating-chat:hover {
+            transform: scale(1.1);
+        }
+
+        .floating-chat svg {
+            width: 28px;
+            height: 28px;
+            color: var(--primary-bg);
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: var(--secondary-bg);
+            border-radius: var(--radius-l);
+            padding: var(--spacing-l);
+            margin-bottom: var(--spacing-m);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-m);
+            margin-bottom: var(--spacing-l);
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--vip-pink));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .vip-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--vip-pink), #FF8BA7);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .uid-container {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-s);
+            margin-bottom: 6px;
+        }
+
+        .uid-badge {
+            background: var(--gold);
+            color: var(--primary-bg);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-icon {
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .copy-icon:hover {
+            opacity: 1;
+        }
+
+        .last-login {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .balance-section {
+            padding-top: var(--spacing-m);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .balance-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .balance-amount {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-m);
+        }
+
+        .amount {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .refresh-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: all 0.3s;
+        }
+
+        .refresh-icon:hover {
+            opacity: 1;
+            transform: rotate(180deg);
+        }
+
+        /* Action Buttons Grid */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-m);
+            margin-bottom: var(--spacing-l);
+        }
+
+        .action-btn {
+            background: var(--card-bg);
+            border-radius: var(--radius-m);
+            padding: var(--spacing-m);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-s);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .action-btn:hover {
+            background: var(--secondary-bg);
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .action-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .action-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-m);
+            margin-bottom: var(--spacing-m);
+        }
+
+        .menu-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-m);
+            padding: var(--spacing-m);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-m);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .menu-card:hover {
+            background: var(--secondary-bg);
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-content {
+            flex: 1;
+        }
+
+        .menu-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .menu-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .arrow-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.4;
+        }
+
+        /* Single Menu Items */
+        .menu-item {
+            background: var(--card-bg);
+            border-radius: var(--radius-m);
+            padding: var(--spacing-m);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-m);
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: var(--spacing-m);
+            border: 2px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: var(--secondary-bg);
+            border-color: var(--accent-cyan);
+            transform: translateX(4px);
+        }
+
+        .menu-item-content {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .badge {
+            background: var(--accent-red);
+            color: var(--text-primary);
+            border-radius: 12px;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--primary-bg);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: var(--spacing-s);
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        .nav-item span {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        .nav-item.active svg,
+        .nav-item.active span {
+            color: var(--accent-cyan);
+        }
+
+        .nav-item:hover svg,
+        .nav-item:hover span {
+            color: var(--accent-cyan);
+        }
+
+        /* Filter Section */
+        .filter-section {
+            margin-bottom: var(--spacing-l);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: var(--spacing-s);
+            overflow-x: auto;
+            padding-bottom: var(--spacing-s);
+            margin-bottom: var(--spacing-m);
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .filter-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-tab {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            padding: 12px 20px;
+            border-radius: var(--radius-m);
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .filter-tab.active {
+            background: var(--accent-cyan);
+            color: var(--primary-bg);
+        }
+
+        .filter-tab:hover:not(.active) {
+            border-color: var(--accent-cyan);
+        }
+
+        .filter-dropdowns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-m);
+        }
+
+        .filter-dropdown {
+            background: var(--card-bg);
+            border-radius: var(--radius-s);
+            padding: 12px var(--spacing-m);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .filter-dropdown:hover {
+            border-color: var(--accent-cyan);
+        }
+
+        /* Transaction Card */
+        .transaction-card {
+            background: var(--secondary-bg);
+            border-radius: var(--radius-m);
+            padding: var(--spacing-m);
+            margin-bottom: var(--spacing-m);
+            border-left: 4px solid var(--success-green);
+            transition: all 0.3s;
+        }
+
+        .transaction-card.failed {
+            border-left-color: var(--accent-red);
+        }
+
+        .transaction-card:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-card);
+        }
+
+        .transaction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-m);
+        }
+
+        .transaction-type {
+            background: var(--accent-red);
+            color: var(--text-primary);
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .transaction-type.deposit {
+            background: var(--success-green);
+        }
+
+        .transaction-status {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--success-green);
+        }
+
+        .transaction-status.failed {
+            color: var(--accent-red);
+        }
+
+        .transaction-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .transaction-label {
+            color: var(--text-secondary);
+        }
+
+        .transaction-value {
+            color: var(--text-primary);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .transaction-value.amount {
+            color: var(--orange);
+            font-weight: 700;
+        }
+
+        .transaction-value.order {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-s);
+            font-size: 12px;
+            font-family: monospace;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-cyan), #00FFDD);
+            border: none;
+            border-radius: var(--radius-full);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary-bg);
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: var(--spacing-m);
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-button);
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--accent-cyan);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-m);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error Message */
+        .error-message {
+            background: rgba(255, 82, 82, 0.1);
+            border: 1px solid var(--accent-red);
+            border-radius: var(--radius-s);
+            padding: var(--spacing-m);
+            margin-bottom: var(--spacing-m);
+            color: var(--accent-red);
+            font-size: 14px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-l) var(--spacing-m);
+            background: linear-gradient(135deg, #141B3D 0%, #1A2347 100%);
+            position: relative;
+            margin: calc(var(--spacing-m) * -1);
+            margin-bottom: var(--spacing-l);
+        }
+
+        .page-header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .page-header .back-btn {
+            position: absolute;
+            left: var(--spacing-m);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .app-container {
+                max-width: 100%;
+            }
+
+            .bottom-nav {
+                max-width: 100%;
+            }
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--spacing-m);
+            margin-top: var(--spacing-l);
+        }
+
+        .pagination-btn {
+            background: var(--card-bg);
+            border: none;
+            border-radius: var(--radius-s);
+            padding: 8px 16px;
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--accent-cyan);
+            color: var(--primary-bg);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span id="current-time">12:30</span>
+            <div class="status-icons">
+                <span>📶</span>
+                <span>📡</span>
+                <span>🔋</span>
+            </div>
+        </div>
+
+        <!-- Navigation Bar -->
+        <div class="nav-bar">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            </svg>
+            <div class="url-bar" id="url-bar">jalwa.vip/login</div>
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="1"/>
+                <circle cx="12" cy="5" r="1"/>
+                <circle cx="12" cy="19" r="1"/>
+            </svg>
+        </div>
+
+        <!-- Login Page -->
+        <div class="page active" id="login-page">
+            <div class="header">
+                <div class="logo">Jalwa.Game</div>
+                <div class="lang-selector">
+                    <span class="flag-icon">🇺🇸</span>
+                    <span>EN</span>
+                </div>
+            </div>
+
+            <div class="login-page">
+                <h1 class="page-title">Log in</h1>
+                <p class="page-subtitle">Welcome back! Please login to continue</p>
+
+                <div class="tab-navigation">
+                    <div class="tab active" data-tab="phone">📱 Phone number</div>
+                    <div class="tab" data-tab="email">✉️ Email Login</div>
+                </div>
+
+                <div class="error-message" id="login-error"></div>
+
+                <form id="login-form">
+                    <div class="form-group">
+                        <div class="input-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                                <line x1="12" y1="18" x2="12.01" y2="18"/>
+                            </svg>
+                            Phone number
+                        </div>
+                        <div class="input-container">
+                            <div class="country-code">
+                                +91
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"/>
+                                </svg>
+                            </div>
+                            <input type="tel" class="input-field" id="phone-input" placeholder="Enter phone number" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                            Password
+                        </div>
+                        <div class="input-container">
+                            <input type="password" class="input-field" id="password-input" placeholder="Enter password" required>
+                            <div class="input-icon" onclick="togglePassword()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-container">
+                        <div class="checkbox" id="remember-checkbox" onclick="toggleCheckbox()"></div>
+                        <span class="checkbox-label" onclick="toggleCheckbox()">Remember password</span>
+                    </div>
+
+                    <button type="submit" class="primary-btn" id="login-btn">Log in</button>
+                </form>
+
+                <button class="secondary-btn" onclick="showRegister()">Register</button>
+
+                <div class="footer-links">
+                    <a class="footer-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        Forgot password
+                    </a>
+                    <a class="footer-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        Customer Service
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Page -->
+        <div class="page" id="home-page">
+            <div class="header">
+                <div class="logo">Jalwa.Game</div>
+                <div class="lang-selector">
+                    <span class="flag-icon">🇺🇸</span>
+                    <span>EN</span>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="avatar" id="user-avatar">A</div>
+                    <div class="profile-info">
+                        <span class="vip-badge">VIP</span>
+                        <div class="uid-container">
+                            <div class="uid-badge">
+                                <span id="user-uid">833117</span>
+                                <svg class="copy-icon" onclick="copyUID()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="last-login" id="last-login">Last login: --</p>
+                    </div>
+                </div>
+
+                <div class="balance-section">
+                    <div class="balance-label">Total balance</div>
+                    <div class="balance-amount">
+                        <div class="amount" id="total-balance">₹0.00</div>
+                        <svg class="refresh-icon" onclick="refreshBalance()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 4 23 10 17 10"/>
+                            <polyline points="1 20 1 14 7 14"/>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <div class="action-btn" onclick="alert('ARWallet feature')">
+                    <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="#FF5252" stroke-width="2">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                        <line x1="1" y1="10" x2="23" y2="10"/>
+                    </svg>
+                    <span class="action-label">ARWallet</span>
+                </div>
+                <div class="action-btn" onclick="showPage('deposit-page')">
+                    <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <polyline points="19 12 12 19 5 12"/>
+                    </svg>
+                    <span class="action-label">Deposit</span>
+                </div>
+                <div class="action-btn" onclick="showPage('withdraw-page')">
+                    <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="#2196F3" stroke-width="2">
+                        <line x1="12" y1="19" x2="12" y2="5"/>
+                        <polyline points="5 12 12 5 19 12"/>
+                    </svg>
+                    <span class="action-label">Withdraw</span>
+                </div>
+                <div class="action-btn" onclick="alert('VIP feature')">
+                    <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span class="action-label">VIP</span>
+                </div>
+            </div>
+
+            <div class="menu-grid">
+                <div class="menu-card" onclick="alert('Game History')">
+                    <div class="menu-icon" style="background: rgba(33, 150, 243, 0.2);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2196F3" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <div class="menu-content">
+                        <div class="menu-title">Game History</div>
+                        <div class="menu-subtitle">View records</div>
+                    </div>
+                    <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+                <div class="menu-card" onclick="alert('Transaction')">
+                    <div class="menu-icon" style="background: rgba(255, 152, 0, 0.2);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="menu-content">
+                        <div class="menu-title">Transaction</div>
+                        <div class="menu-subtitle">All records</div>
+                    </div>
+                    <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+                <div class="menu-card" onclick="showPage('deposit-page')">
+                    <div class="menu-icon" style="background: rgba(76, 175, 80, 0.2);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <polyline points="19 12 12 19 5 12"/>
+                        </svg>
+                    </div>
+                    <div class="menu-content">
+                        <div class="menu-title">Deposit</div>
+                        <div class="menu-subtitle">Add funds</div>
+                    </div>
+                    <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+                <div class="menu-card" onclick="showPage('withdraw-page')">
+                    <div class="menu-icon" style="background: rgba(244, 67, 54, 0.2);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F44336" stroke-width="2">
+                            <line x1="12" y1="19" x2="12" y2="5"/>
+                            <polyline points="5 12 12 5 19 12"/>
+                        </svg>
+                    </div>
+                    <div class="menu-content">
+                        <div class="menu-title">Withdraw</div>
+                        <div class="menu-subtitle">Cash out</div>
+                    </div>
+                    <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="alert('Notifications')">
+                <div class="menu-icon" style="background: rgba(255, 152, 0, 0.2);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                </div>
+                <div class="menu-item-content">Notification</div>
+                <span class="badge" id="notification-badge">0</span>
+                <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
+
+            <div class="menu-item" onclick="alert('Gifts')">
+                <div class="menu-icon" style="background: rgba(233, 30, 99, 0.2);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E91E63" stroke-width="2">
+                        <polyline points="20 12 20 22 4 22 4 12"/>
+                        <rect x="2" y="7" width="20" height="5"/>
+                        <line x1="12" y1="22" x2="12" y2="7"/>
+                        <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+                        <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+                    </svg>
+                </div>
+                <div class="menu-item-content">Gifts</div>
+                <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
+
+            <div class="menu-item" onclick="alert('Game statistics')">
+                <div class="menu-icon" style="background: rgba(156, 39, 176, 0.2);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9C27B0" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                </div>
+                <div class="menu-item-content">Game statistics</div>
+                <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Withdraw History Page -->
+        <div class="page" id="withdraw-page">
+            <div class="page-header">
+                <svg class="back-btn" onclick="showPage('home-page')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"/>
+                    <polyline points="12 19 5 12 12 5"/>
+                </svg>
+                <h2 class="page-header-title">Withdrawal history</h2>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-tabs">
+                    <div class="filter-tab active" onclick="filterWithdrawType('all')">All</div>
+                    <div class="filter-tab" onclick="filterWithdrawType('arpay')">ARPay</div>
+                    <div class="filter-tab" onclick="filterWithdrawType('bank')">BANK CARD</div>
+                    <div class="filter-tab" onclick="filterWithdrawType('usdt')">USDT</div>
+                </div>
+
+                <div class="filter-dropdowns">
+                    <div class="filter-dropdown" onclick="alert('Filter by status')">
+                        <span>All</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                    <div class="filter-dropdown" onclick="alert('Choose date')">
+                        <span>Choose a date</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div id="withdraw-list"></div>
+            <div class="loading" id="withdraw-loading">
+                <div class="spinner"></div>
+                <p>Loading withdrawals...</p>
+            </div>
+
+            <div class="pagination" id="withdraw-pagination" style="display: none;">
+                <button class="pagination-btn" id="withdraw-prev" onclick="previousWithdrawPage()">Previous</button>
+                <span class="pagination-info" id="withdraw-page-info">Page 1 of 1</span>
+                <button class="pagination-btn" id="withdraw-next" onclick="nextWithdrawPage()">Next</button>
+            </div>
+        </div>
+
+        <!-- Deposit History Page -->
+        <div class="page" id="deposit-page">
+            <div class="page-header">
+                <svg class="back-btn" onclick="showPage('home-page')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"/>
+                    <polyline points="12 19 5 12 12 5"/>
+                </svg>
+                <h2 class="page-header-title">Deposit history</h2>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-tabs">
+                    <div class="filter-tab active" onclick="filterDepositType('all')">All</div>
+                    <div class="filter-tab" onclick="filterDepositType('arupipay')">ArUpi Pay</div>
+                    <div class="filter-tab" onclick="filterDepositType('innate')">Innate UPI-QR</div>
+                    <div class="filter-tab" onclick="filterDepositType('usdt')">USDT</div>
+                </div>
+
+                <div class="filter-dropdowns">
+                    <div class="filter-dropdown" onclick="alert('Filter by status')">
+                        <span>All</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                    <div class="filter-dropdown" onclick="alert('Choose date')">
+                        <span>Choose a date</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div id="deposit-list"></div>
+            <div class="loading" id="deposit-loading">
+                <div class="spinner"></div>
+                <p>Loading deposits...</p>
+            </div>
+
+            <div class="pagination" id="deposit-pagination" style="display: none;">
+                <button class="pagination-btn" id="deposit-prev" onclick="previousDepositPage()">Previous</button>
+                <span class="pagination-info" id="deposit-page-info">Page 1 of 1</span>
+                <button class="pagination-btn" id="deposit-next" onclick="nextDepositPage()">Next</button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="alert('Promotion')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span>Promotion</span>
+            </div>
+            <div class="nav-item" onclick="alert('Activity')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <span>Activity</span>
+            </div>
+            <div class="nav-item active" onclick="showPage('home-page')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                </svg>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" onclick="alert('Wallet')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                    <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+                <span>Wallet</span>
+            </div>
+            <div class="nav-item" onclick="showPage('home-page')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>Account</span>
+            </div>
+        </div>
+
+        <!-- Floating Chat Button -->
+        <div class="floating-chat" onclick="alert('Customer Support')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+        </div>
+    </div>
+
+    <script src="jalwa-api.js"></script>
+</body>
+</html>
