@@ -1,4 +1,4 @@
-// Jalwa API Client
+// Jalwa API Client - Fixed Version
 const JalwaAPI = {
     baseURL: 'https://api.jalwaapi.com/api/webapi',
     deviceId: '6aab05dedf11c45469f33b89b97cde4a',
@@ -15,10 +15,19 @@ const JalwaAPI = {
         return result;
     },
     
-    // Generate MD5 signature
+    // Generate MD5 signature - CRITICAL: Must match documentation exactly
     generateSignature(data) {
-        const jsonStr = JSON.stringify(data, Object.keys(data).sort());
-        return CryptoJS.MD5(jsonStr).toString(CryptoJS.enc.Hex).toUpperCase();
+        // Sort keys alphabetically and create JSON string with NO SPACES
+        const sortedKeys = Object.keys(data).sort();
+        const sortedData = {};
+        sortedKeys.forEach(key => {
+            sortedData[key] = data[key];
+        });
+        const jsonStr = JSON.stringify(sortedData, null, 0).replace(/\s/g, '');
+        console.log('Signature input string:', jsonStr);
+        const hash = CryptoJS.MD5(jsonStr).toString(CryptoJS.enc.Hex).toUpperCase();
+        console.log('Generated signature:', hash);
+        return hash;
     },
     
     // Login API
@@ -26,6 +35,7 @@ const JalwaAPI = {
         const random = this.generateRandom();
         const timestamp = Math.floor(Date.now() / 1000);
         
+        // Signature data - MUST include ONLY these fields in alphabetical order
         const sigData = {
             deviceId: this.deviceId,
             language: 0,
@@ -38,6 +48,7 @@ const JalwaAPI = {
         
         const signature = this.generateSignature(sigData);
         
+        // Full payload
         const payload = {
             username: username,
             pwd: password,
@@ -51,10 +62,16 @@ const JalwaAPI = {
             signature: signature
         };
         
+        console.log('Login payload:', JSON.stringify(payload, null, 2));
+        
+        // Headers exactly as in documentation
         const headers = {
             'Content-Type': 'application/json;charset=UTF-8',
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
             'Origin': 'https://jalwa.vip',
-            'Referer': 'https://jalwa.vip/'
+            'Referer': 'https://jalwa.vip/',
+            'ar-origin': 'https://jalwa.vip'
         };
         
         try {
@@ -71,19 +88,18 @@ const JalwaAPI = {
             if (data.code === 0) {
                 this.token = data.data.token;
                 this.userData = data.data;
-                // Store token in localStorage
                 localStorage.setItem('jalwa_token', this.token);
                 localStorage.setItem('jalwa_user', JSON.stringify(this.userData));
                 return { success: true, data: data.data };
             } else {
-                return { success: false, message: data.msg };
+                return { success: false, message: data.msg || 'Login failed' };
             }
         } catch (error) {
             console.error('Login error:', error);
             if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
                 return { 
                     success: false, 
-                    message: 'CORS Error: Cannot connect to API from browser. Please use a backend proxy or CORS extension. See console for details.' 
+                    message: 'CORS Error: Cannot connect to API. Enable CORS extension or use proxy server.' 
                 };
             }
             return { success: false, message: `Network error: ${error.message}` };
@@ -96,9 +112,14 @@ const JalwaAPI = {
             this.token = localStorage.getItem('jalwa_token');
         }
         
+        if (!this.token) {
+            return { success: false, message: 'Not logged in' };
+        }
+        
         const random = this.generateRandom();
         const timestamp = Math.floor(Date.now() / 1000);
         
+        // Signature only includes language and random
         const sigData = {
             language: 0,
             random: random
@@ -114,11 +135,13 @@ const JalwaAPI = {
         };
         
         const headers = {
-            'Content-Type': 'application/json;charset=UTF-8',
-            'Authorization': `Bearer ${this.token}`,
-            'Origin': 'https://jalwa.vip',
-            'Referer': 'https://jalwa.vip/',
-            'ar-origin': 'https://jalwa.vip'
+            'accept': 'application/json, text/plain, */*',
+            'accept-language': 'en-US,en;q=0.9,hi;q=0.8',
+            'ar-origin': 'https://jalwa.vip',
+            'authorization': `Bearer ${this.token}`,
+            'content-type': 'application/json;charset=UTF-8',
+            'origin': 'https://jalwa.vip',
+            'referer': 'https://jalwa.vip/'
         };
         
         try {
@@ -129,6 +152,7 @@ const JalwaAPI = {
             });
             
             const data = await response.json();
+            console.log('GetUserInfo response:', data);
             
             if (data.code === 0) {
                 this.userData = data.data;
@@ -152,6 +176,7 @@ const JalwaAPI = {
         const random = this.generateRandom();
         const timestamp = Math.floor(Date.now() / 1000);
         
+        // Signature includes: language, pageNo, pageSize, random, state, type (alphabetical)
         const sigData = {
             language: 0,
             pageNo: pageNo,
@@ -177,11 +202,13 @@ const JalwaAPI = {
         };
         
         const headers = {
-            'Content-Type': 'application/json;charset=UTF-8',
-            'Authorization': `Bearer ${this.token}`,
-            'Origin': 'https://jalwa.vip',
-            'Referer': 'https://jalwa.vip/',
-            'ar-origin': 'https://jalwa.vip'
+            'accept': 'application/json, text/plain, */*',
+            'accept-language': 'en-US,en;q=0.9,hi;q=0.8',
+            'ar-origin': 'https://jalwa.vip',
+            'authorization': `Bearer ${this.token}`,
+            'content-type': 'application/json;charset=UTF-8',
+            'origin': 'https://jalwa.vip',
+            'referer': 'https://jalwa.vip/'
         };
         
         try {
@@ -213,6 +240,7 @@ const JalwaAPI = {
         const random = this.generateRandom();
         const timestamp = Math.floor(Date.now() / 1000);
         
+        // Signature includes: language, pageNo, pageSize, payId, payTypeId, random, state (alphabetical)
         const sigData = {
             language: 0,
             pageNo: pageNo,
@@ -240,11 +268,13 @@ const JalwaAPI = {
         };
         
         const headers = {
-            'Content-Type': 'application/json;charset=UTF-8',
-            'Authorization': `Bearer ${this.token}`,
-            'Origin': 'https://jalwa.vip',
-            'Referer': 'https://jalwa.vip/',
-            'ar-origin': 'https://jalwa.vip'
+            'accept': 'application/json, text/plain, */*',
+            'accept-language': 'en-US,en;q=0.9,hi;q=0.8',
+            'ar-origin': 'https://jalwa.vip',
+            'authorization': `Bearer ${this.token}`,
+            'content-type': 'application/json;charset=UTF-8',
+            'origin': 'https://jalwa.vip',
+            'referer': 'https://jalwa.vip/'
         };
         
         try {
